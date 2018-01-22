@@ -9,3 +9,6 @@
 !/.gitignore.d
 !/.gitignore.d/mr
 !/.mrconfig
+!/bin
+!/bin/,vcsh-init
+!/bin/,vcsh-write-gitignore

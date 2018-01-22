@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Bootstrap the vcsh init process
+#   $1 Repository name
+
+set -e
+
+# has argument
+if [[ $# -eq 0 ]]; then
+    >&2 echo "usage: $(basename "$0") REPOSITORY"
+    exit 1
+fi
+
+# GitHub user
+USERNAME="$(git config github.user || true)"
+if [[ -z $USERNAME ]]; then
+    cat <<EOF >&2
+E: Configure your GitHub user with:
+
+    git config --global github.user USERNAME
+EOF
+    exit 1
+fi
+
+# directories
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
+AVAIL_DIR="$CONFIG/mr/available.d"
+CONFIG_DIR="$CONFIG/mr/config.d"
+VCSH_DIR="$CONFIG/vcsh/repo.d"
+IGNORE_DIR="$HOME/.gitignore.d"
+REPO="$1"
+mkdir -p "$AVAIL_DIR" "$CONFIG_DIR" "$VCSH_DIR" "$IGNORE_DIR"
+if [[ -d $VCSH_DIR/$REPO.git ]]; then
+    >&2 echo "E: Repository '$REPO' already exists"
+    exit 1
+fi
+
+# vcsh(1) init
+vcsh init "$REPO"
+
+# generate dummy .gitignore
+touch "$IGNORE_DIR/$REPO"
+
+# mr(1) files
+cat <<EOF > "$AVAIL_DIR/$REPO.vcsh"
+[\$HOME/.config/vcsh/repo.d/$REPO.git]
+checkout = vcsh clone git://github.com/$USERNAME/vcsh-$REPO.git $REPO
+EOF
+ln -s "../available.d/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh"
+vcsh "$REPO" add "$AVAIL_DIR/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh" "$IGNORE_DIR/$REPO"
+
+# note about .gitignore.d
+B= ; R=
+if [[ -t 0 ]]; then
+    B=$'\e[1m' # bold
+    R=$'\e[0m' # roman
+fi
+cat <<EOF
+Remember to run after adding all files
+
+    ${B},vcsh-write-gitignore $REPO && vcsh $REPO add .${R}
+
+to fill the gitignore
+EOF

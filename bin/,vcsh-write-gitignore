@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Write the gitignore and remove backup, ignoring vcsh message
+#   $1 Repository name
+
+set -e
+
+# has argument
+if [[ $# -eq 0 ]]; then
+    >&2 echo "usage: $(basename "$0") REPOSITORY"
+    exit 1
+fi
+
+# do stuff
+vcsh write-gitignore "$1" > /dev/null
+rm "$HOME/.gitignore.d/$1.bak"
