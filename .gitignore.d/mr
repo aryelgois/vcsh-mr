@@ -12,3 +12,4 @@
 !/bin
 !/bin/,vcsh-init
 !/bin/,vcsh-write-gitignore
+!/bin/,vcsh-ls
