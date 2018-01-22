@@ -50,7 +50,7 @@ vcsh "$REPO" add "$AVAIL_DIR/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh" "$IGNORE_DIR/$
 
 # note about .gitignore.d
 B= ; R=
-if [[ -t 0 ]]; then
+if [[ -t 1 ]]; then
     B=$'\e[1m' # bold
     R=$'\e[0m' # roman
 fi
