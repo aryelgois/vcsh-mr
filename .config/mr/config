@@ -1,5 +1,6 @@
 [DEFAULT]
 jobs = 5
+diff = git colored diff
 fetch = git fetch
 gc = git gc "$@"
 lg = git colored log -1 && echo && git colored lg
