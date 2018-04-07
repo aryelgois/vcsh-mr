@@ -1,5 +1,7 @@
 [DEFAULT]
-git_gc = git gc "$@"
 jobs = 5
+gc = git gc "$@"
+lg = git colored log -1 && echo && git colored lg
+which = :
 
 include = cat ~/.config/mr/config.d/*
