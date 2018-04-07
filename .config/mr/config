@@ -5,6 +5,7 @@ fetch = git fetch
 gc = git gc "$@"
 lg = git colored log -1 && echo && git colored lg
 pull = git pull
+staged = git colored staged
 which = :
 
 include = cat ~/.config/mr/config.d/*
