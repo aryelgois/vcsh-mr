@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -e
+
+#
+# helper function
+#
+
+github-install () {
+    FULL_REPOSITORY="$1"
+    REPOSITORY="$(basename $1)"
+    BRANCH="$2"
+    CLONE_PATH="$HOME/git/$REPOSITORY"
+
+    echo "Installing $REPOSITORY"
+    if [ ! -e "$CLONE_PATH" ] || [ -z "$(ls -A "$CLONE_PATH")" ]; then
+        git clone "https://github.com/$FULL_REPOSITORY.git" "$CLONE_PATH"
+    fi
+    cd "$CLONE_PATH"
+    git checkout "$BRANCH"
+    make install clean PREFIX="$3"
+    echo
+}
+
+#
+# Pre install
+#
+
+echo 'Updating package index'
+sudo apt-get update
+echo
+
+#
+# Install debian packages
+#
+
+echo 'Installing dependencies'
+sudo apt-get install -y \
+    git                 `: distributed version control` \
+    libio-pty-easy-perl `: myrepos use it to cache terminal output` \
+    perl-doc            `: for myrepos manual` \
+    ruby-ronn           `: for vcsh manual`
+echo
+
+#
+# Install from source
+#
+
+github-install aryelgois/vcsh develop ~/.local
+github-install aryelgois/myrepos develop ~/.local
+
+
+echo 'Done'
+
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    echo "Note: Add '$HOME/.local/bin' to your PATH"
+fi

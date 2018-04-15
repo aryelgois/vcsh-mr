@@ -13,6 +13,7 @@
 !/.config/mr/*
 
 !/bin
+!/bin/,setup-myrepos
 !/bin/,vcsh-init
 !/bin/,vcsh-write-gitignore
 !/bin/,vcsh-ls
