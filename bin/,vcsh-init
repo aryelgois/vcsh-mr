@@ -44,27 +44,26 @@ vcsh init "$REPO"
 # create directories
 mkdir -p "$AVAIL_DIR" "$CONFIG_DIR" "$IGNORE_DIR"
 
-# generate dummy .gitignore
-touch "$IGNORE_FILE"
-
-# mr(1) files
+# create config files
 cat <<EOF > "$AVAIL_FILE"
 [\$HOME${REPO_DIR#$HOME}]
 checkout = vcsh clone https://github.com/$USERNAME/vcsh-$REPO.git $REPO
 EOF
 ln -s "../available.d/$REPO.vcsh" "$CONFIG_FILE"
-vcsh "$REPO" add "$AVAIL_FILE" "$CONFIG_FILE" "$IGNORE_FILE"
 
-# note about .gitignore.d
-B= ; R=
-if [[ -t 1 ]]; then
-    B=$'\e[1m' # bold
-    R=$'\e[0m' # roman
-fi
-cat <<EOF
-Remember to run after adding all files
-
-    ${B},vcsh-write-gitignore $REPO && vcsh $REPO add .${R}
-
-to fill the gitignore
+# create gitignore file
+cat <<EOF > "$IGNORE_FILE"
+*
+!/.config
+!/.config/mr
+!/.config/mr/available.d
+!/.config/mr/available.d/$REPO.vcsh
+!/.config/mr/config.d
+!/.config/mr/config.d/$REPO.vcsh
+!/.gitignore.d
+!/.gitignore.d/$REPO
 EOF
+
+# Initial commit
+vcsh "$REPO" add "$AVAIL_FILE" "$CONFIG_FILE" "$IGNORE_FILE"
+vcsh "$REPO" commit -m 'Initial commit'
