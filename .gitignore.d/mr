@@ -9,6 +9,7 @@
 !/.gitignore.d/mr
 
 !/.mrconfig
+!/.mrtrust
 
 !/.config/mr/*
 
