@@ -43,7 +43,7 @@ touch "$IGNORE_DIR/$REPO"
 # mr(1) files
 cat <<EOF > "$AVAIL_DIR/$REPO.vcsh"
 [\$HOME/.config/vcsh/repo.d/$REPO.git]
-checkout = vcsh clone git://github.com/$USERNAME/vcsh-$REPO.git $REPO
+checkout = vcsh clone https://github.com/$USERNAME/vcsh-$REPO.git $REPO
 EOF
 ln -s "../available.d/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh"
 vcsh "$REPO" add "$AVAIL_DIR/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh" "$IGNORE_DIR/$REPO"
