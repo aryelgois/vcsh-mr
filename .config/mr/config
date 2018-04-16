@@ -4,6 +4,9 @@ st = status
 [DEFAULT]
 jobs = 5
 
+git_branch = git colored branch "$@"
+vcsh_branch = vcsh run "$MR_REPO" git colored branch "$@"
+
 git_diff = git colored diff "$@"
 vcsh_diff = vcsh run "$MR_REPO" git colored diff "$@"
 
