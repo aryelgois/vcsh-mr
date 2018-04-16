@@ -1,3 +1,6 @@
+[ALIAS]
+st = status
+
 [DEFAULT]
 jobs = 5
 
