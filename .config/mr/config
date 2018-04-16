@@ -19,6 +19,6 @@ git_log = git log-fullest "$@" | cat
 vcsh_log = vcsh run "$MR_REPO" git log-fullest "$@" | cat
 
 git_staged = git colored staged "$@"
-vcsh_staged = vcsh run "$MR_REPO" git staged "$@"
+vcsh_staged = vcsh run "$MR_REPO" git colored staged "$@"
 
 include = cat ~/.config/mr/config.d/*
