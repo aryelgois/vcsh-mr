@@ -21,32 +21,39 @@ EOF
     exit 1
 fi
 
-# directories
-CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
-AVAIL_DIR="$CONFIG/mr/available.d"
-CONFIG_DIR="$CONFIG/mr/config.d"
-VCSH_DIR="$CONFIG/vcsh/repo.d"
-IGNORE_DIR="$HOME/.gitignore.d"
+# variables
 REPO="$1"
-mkdir -p "$AVAIL_DIR" "$CONFIG_DIR" "$VCSH_DIR" "$IGNORE_DIR"
-if [[ -d $VCSH_DIR/$REPO.git ]]; then
+PREFIX="$HOME/.config"
+
+AVAIL_DIR="$PREFIX/mr/available.d"
+CONFIG_DIR="$PREFIX/mr/config.d"
+IGNORE_DIR="$HOME/.gitignore.d"
+REPO_DIR="$PREFIX/vcsh/repo.d/$REPO.git"
+
+AVAIL_FILE="$AVAIL_DIR/$REPO.vcsh"
+CONFIG_FILE="$CONFIG_DIR/$REPO.vcsh"
+IGNORE_FILE="$IGNORE_DIR/$REPO"
+
+# vcsh(1) init
+if [[ -d $REPO_DIR ]]; then
     >&2 echo "E: Repository '$REPO' already exists"
     exit 1
 fi
-
-# vcsh(1) init
 vcsh init "$REPO"
 
+# create directories
+mkdir -p "$AVAIL_DIR" "$CONFIG_DIR" "$IGNORE_DIR"
+
 # generate dummy .gitignore
-touch "$IGNORE_DIR/$REPO"
+touch "$IGNORE_FILE"
 
 # mr(1) files
-cat <<EOF > "$AVAIL_DIR/$REPO.vcsh"
-[\$HOME/.config/vcsh/repo.d/$REPO.git]
+cat <<EOF > "$AVAIL_FILE"
+[\$HOME${REPO_DIR#$HOME}]
 checkout = vcsh clone https://github.com/$USERNAME/vcsh-$REPO.git $REPO
 EOF
-ln -s "../available.d/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh"
-vcsh "$REPO" add "$AVAIL_DIR/$REPO.vcsh" "$CONFIG_DIR/$REPO.vcsh" "$IGNORE_DIR/$REPO"
+ln -s "../available.d/$REPO.vcsh" "$CONFIG_FILE"
+vcsh "$REPO" add "$AVAIL_FILE" "$CONFIG_FILE" "$IGNORE_FILE"
 
 # note about .gitignore.d
 B= ; R=
